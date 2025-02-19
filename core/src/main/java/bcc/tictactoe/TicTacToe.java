@@ -32,10 +32,11 @@ public class TicTacToe extends Game {
 
     }
 
-    public void setPlayer(int curPlayer, String option) {
+    public void setPlayer(int curPlayer,Player newPlayer) {
         //checkpoint 1 - set player, then determine what screen to go to next with setScreen(new ______)
         //NOTE - the only player types that you have programmed so gr are Human and RandomAI
-
+        this.curPlayer = curPlayer;
+       //setScreen(new GameScreen(this));
     }
 
     public void setSimulated(boolean isSimulated) {
