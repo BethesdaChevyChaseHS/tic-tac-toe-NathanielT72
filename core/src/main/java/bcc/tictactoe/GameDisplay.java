@@ -48,6 +48,7 @@ public class GameDisplay extends ScreenAdapter {
     }
 
     public void initTableDisplay() {// initializes tic tac toe board - no changes needed 
+        stage = new Stage();
         boardTable = new Table();
         boardTable.setPosition(BOARD_X, BOARD_Y);
         boardTable.setSize(BOARD_WIDTH, BOARD_HEIGHT);

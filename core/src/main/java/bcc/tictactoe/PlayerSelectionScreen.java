@@ -26,7 +26,8 @@ public class PlayerSelectionScreen extends ScreenAdapter{
         stage = new Stage();
         //load skin
         skin = new Skin(Gdx.files.internal("skins/glassy/glassy-ui.json"));
-      
+        
+        Gdx.input.setInputProcessor(stage);
         //add title saying something like "select player"
        //if you would like a background color behind the title, you can use the helper method in the Constants file
        //check out the documentation linked in the readme / on canvas
@@ -68,18 +69,19 @@ public class PlayerSelectionScreen extends ScreenAdapter{
             game.setPlayer(curPlayer, newPlayer);
         }
     });
-       /*TextButton smartAIButton = new TextButton("Smart AI", skin);
-       smartAIButton.addListener(new ClickListener() {
+       TextButton smartAIButton = new TextButton("Smart AI", skin);
+       /*smartAIButton.addListener(new ClickListener() {
         @Override
         public void clicked(InputEvent event, float x, float y) {
             Player newPlayer = new SmartAI();
                 game.setPlayer(curPlayer, newPlayer);
         }
     });
-*/
+    */
+
         MyTable.add(randomAIButton).pad(8).row();
         MyTable.add(slightlySmartAIButton).pad(8).row();
-        //MyTable.add(smartAIButton).pad(8).row();
+        MyTable.add(smartAIButton).pad(8).row();
 
         stage.addActor(MyTable);
       

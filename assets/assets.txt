@@ -4,4 +4,5 @@ skins/glassy/glassy-ui.atlas
 skins/glassy/glassy-ui.json
 skins/glassy/glassy-ui.png
 space_tictactoe.png
+tictactoe.jpg
 tictactoe_board.png
