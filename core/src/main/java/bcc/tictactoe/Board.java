@@ -4,10 +4,16 @@ public class Board {
     private Mark[][] grid;
     public Board() {
         //initialize grid to be 3x3 
+        grid = new Mark[3][3];
     }
 
     public void reset() {
         //should restart the game - set all cells to empty
+        for(int i = 0; i < grid.length; i++) {
+            for(int j = 0; j < grid[0].length; j++) {
+                grid[i][j] = Mark.EMPTY;
+            }
+        }
 
     }
 

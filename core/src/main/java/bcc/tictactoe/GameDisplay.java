@@ -48,11 +48,13 @@ public class GameDisplay extends ScreenAdapter {
     }
 
     public void initTableDisplay() {// initializes tic tac toe board - no changes needed 
+        skin = new Skin(Gdx.files.internal("skins/glassy/glassy-ui.json"));
         stage = new Stage();
         boardTable = new Table();
         boardTable.setPosition(BOARD_X, BOARD_Y);
         boardTable.setSize(BOARD_WIDTH, BOARD_HEIGHT);
-
+        Board board = new Board();
+        game.setBoardState(board);
         // Set the background image.
         Texture backgroundTexture = new Texture(Gdx.files.internal("tictactoe_board.png"));
         TextureRegionDrawable backgroundDrawable = new TextureRegionDrawable(new TextureRegion(backgroundTexture));
