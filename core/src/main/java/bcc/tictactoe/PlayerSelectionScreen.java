@@ -77,8 +77,8 @@ public class PlayerSelectionScreen extends ScreenAdapter{
                 game.setPlayer(curPlayer, newPlayer);
         }
     });
+        
     */
-
         MyTable.add(randomAIButton).pad(8).row();
         MyTable.add(slightlySmartAIButton).pad(8).row();
         MyTable.add(smartAIButton).pad(8).row();

@@ -26,6 +26,6 @@ public abstract class Player {
     }
     public String getRecord() {
         //print w/l/d record
-        return "";
+        return getNumWins() + "W " + getNumLosses() + "L " + getNumTies() + "D";
     }
 }

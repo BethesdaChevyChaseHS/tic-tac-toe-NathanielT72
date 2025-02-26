@@ -33,8 +33,12 @@ public class GameDisplay extends ScreenAdapter {
 
 
     private boolean gameOver = false;
-    private Label resultLabel;
+    private Container<Label> resultLabel;
     private TextButton playAgainButton;
+    private Container<Label> curPlayerDisplay;
+    private Container<Label> whosPlaying;
+    private Container<Label> player1Record;
+    private Container<Label> player2Record;
 
     
 
@@ -42,14 +46,48 @@ public class GameDisplay extends ScreenAdapter {
     public GameDisplay(TicTacToe game) {
         //set up the screen you you like
         this.game = game;
+        skin = new Skin(Gdx.files.internal("skins/glassy/glassy-ui.json"));
+        stage = new Stage();
+        Gdx.input.setInputProcessor(stage);
         
+
+        Texture backgroundTexture = new Texture(Gdx.files.internal("space_tictactoe.png"));
+        Image backgroundImage = new Image(backgroundTexture);
+        backgroundImage.setFillParent(true);
+        stage.addActor(backgroundImage);
+
+        player1Record = Constants.createLabelWithBackgrounColor(game.getPlayer1() + "(" + Mark.X + "): " + game.getPlayer1().getRecord(), Color.FIREBRICK, skin);
+        player1Record.setPosition(260, 440);
+        player1Record.pack();
+        stage.addActor(player1Record);
+
+        player2Record = Constants.createLabelWithBackgrounColor(game.getPlayer2() + "(" + Mark.O + "): " + game.getPlayer2().getRecord(), Color.FIREBRICK, skin);
+        player2Record.setPosition(260, 400);
+        player2Record.pack();
+        stage.addActor(player2Record);
+
+        resultLabel = Constants.createLabelWithBackgrounColor("Who's Gonna Win?", Color.FIREBRICK, skin);
+        resultLabel.setPosition(100, 20);
+        resultLabel.pack();
+        stage.addActor(resultLabel);
+
+        game.resetCurPlayer();
+        curPlayerDisplay = Constants.createLabelWithBackgrounColor("Current Player: " + game.getCurPlayerMark(), Color.FIREBRICK, skin);
+        curPlayerDisplay.setPosition(0, 440);
+        curPlayerDisplay.pack();
+        stage.addActor(curPlayerDisplay);
+
+        whosPlaying = Constants.createLabelWithBackgrounColor(game.getCurPlayerObj() + ": " + Mark.X + " vs " + game.getPlayer2() + ": " + Mark.O, Color.FIREBRICK, skin);
+        whosPlaying.setPosition(0, 360);
+        whosPlaying.pack();
+        stage.addActor(whosPlaying);
+
+        game.setBoardState(new Board());
         initTableDisplay();
         updateBoardDisplay();
     }
 
     public void initTableDisplay() {// initializes tic tac toe board - no changes needed 
-        skin = new Skin(Gdx.files.internal("skins/glassy/glassy-ui.json"));
-        stage = new Stage();
         boardTable = new Table();
         boardTable.setPosition(BOARD_X, BOARD_Y);
         boardTable.setSize(BOARD_WIDTH, BOARD_HEIGHT);
@@ -59,6 +97,9 @@ public class GameDisplay extends ScreenAdapter {
         Texture backgroundTexture = new Texture(Gdx.files.internal("tictactoe_board.png"));
         TextureRegionDrawable backgroundDrawable = new TextureRegionDrawable(new TextureRegion(backgroundTexture));
         boardTable.setBackground(backgroundDrawable);
+
+            
+            
 
        
         // Force the table to layout from the top (so that row 0 appears at the top).
@@ -86,14 +127,52 @@ public class GameDisplay extends ScreenAdapter {
 
     
     public void handleBoardClick(int row, int col) {
+        
         //checkpoint 2
         //this position was clicked, play the move, then call handle move made
+        if(game.getCurPlayer() == 0 && game.getBoardState().makeMove(row,col,Mark.X) == true) {
+            game.getBoardState().makeMove(row, col, Mark.X);
+            game.setCurPlayer(1);
+            handleMoveMade();
+            curPlayerDisplay.getActor().setText("Current Player: " + game.getCurPlayerMark());
+        }
+        else if (game.getCurPlayer() == 1 && game.getBoardState().makeMove(row,col,Mark.O) == true){
+            game.getBoardState().makeMove(row, col, Mark.O); 
+            game.setCurPlayer(0);
+            handleMoveMade();
+            curPlayerDisplay.getActor().setText("Current Player: " + game.getCurPlayerMark());
+        }
+        updateBoardDisplay();
     }
 
     public void handleMoveMade(){//checkpoint 2
         //call updateBoardDisplay
+        updateBoardDisplay();
+
         //check for a win or tie. If there is one, call showResult() with a message containing the winner, and update the player stats. 
-       
+       if(game.getBoardState().checkWin() == Mark.TIE) {
+        game.getPlayer1().incrementTies();
+        game.getPlayer2().incrementTies();
+        player1Record.getActor().setText(game.getPlayer1() + "(" + Mark.X + "): " + game.getPlayer1().getRecord());
+        player2Record.getActor().setText(game.getPlayer2() + "(" + Mark.O + "): " + game.getPlayer2().getRecord());
+        showResult("Tie!");
+       }
+
+       if(game.getBoardState().checkWin() == Mark.X) {
+        game.getPlayer1().incrementWins();
+        game.getPlayer2().incrementLosses();
+        player1Record.getActor().setText(game.getPlayer1() + "(" + Mark.X + "): " + game.getPlayer1().getRecord());
+        player2Record.getActor().setText(game.getPlayer2() + "(" + Mark.O + "): " + game.getPlayer2().getRecord());
+        showResult("X Wins!");
+       }
+
+       if(game.getBoardState().checkWin() == Mark.O) {
+        game.getPlayer1().incrementLosses();
+        game.getPlayer2().incrementWins();
+        player1Record.getActor().setText(game.getPlayer1() + "(" + Mark.X + "): " + game.getPlayer1().getRecord());
+        player2Record.getActor().setText(game.getPlayer2() + "(" + Mark.O + "): " + game.getPlayer2().getRecord());
+        showResult("O Wins!");
+       }
 
         //checkpoint 3 modification
         //if game is simulated, instead of having a popup by calling showresult, start the next game if we have not run all the simulations
@@ -102,12 +181,26 @@ public class GameDisplay extends ScreenAdapter {
 
     private void showResult(String result) {
         // Create an overlay to show the result. Include a button to play again. 
-
+        resultLabel.getActor().setText(result);
         // when the button is clicked, it should dissappear - you can do this using the .remove() command. 
-        
+        playAgainButton = new TextButton("Play Again!",skin);
+        playAgainButton.setPosition(100, 100);
+        stage.addActor(playAgainButton);
+        playAgainButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                playAgainButton.remove();
+                resetGame();
+            }
+        });
     }
     public void resetGame() {
         //update board state, current player, etc. 
+        game.getBoardState().reset();
+        updateBoardDisplay();
+        game.setCurPlayer(0);
+        resultLabel.getActor().setText("Who's Gonna Win?");
+        curPlayerDisplay.getActor().setText("Current Player: " + game.getCurPlayerMark());
     }
 
     public void updateBoardDisplay() {//updates the board, you should call this if a move is made. No need to change. 
