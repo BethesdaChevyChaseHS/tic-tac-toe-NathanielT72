@@ -149,8 +149,33 @@ public class GameDisplay extends ScreenAdapter {
         //call updateBoardDisplay
         updateBoardDisplay();
 
+        if(game.getIsSimulated() == true) {
+            if(game.getBoardState().checkWin() == Mark.TIE) {
+                game.getPlayer1().incrementTies();
+                game.getPlayer2().incrementTies();
+                player1Record.getActor().setText(game.getPlayer1() + "(" + Mark.X + "): " + game.getPlayer1().getRecord());
+                player2Record.getActor().setText(game.getPlayer2() + "(" + Mark.O + "): " + game.getPlayer2().getRecord());
+                resetGame();
+            }
+
+            if(game.getBoardState().checkWin() == Mark.X) {
+                game.getPlayer1().incrementWins();
+                game.getPlayer2().incrementLosses();
+                player1Record.getActor().setText(game.getPlayer1() + "(" + Mark.X + "): " + game.getPlayer1().getRecord());
+                player2Record.getActor().setText(game.getPlayer2() + "(" + Mark.O + "): " + game.getPlayer2().getRecord());
+               }
+
+            if(game.getBoardState().checkWin() == Mark.O) {
+                game.getPlayer1().incrementLosses();
+                game.getPlayer2().incrementWins();
+                player1Record.getActor().setText(game.getPlayer1() + "(" + Mark.X + "): " + game.getPlayer1().getRecord());
+                player2Record.getActor().setText(game.getPlayer2() + "(" + Mark.O + "): " + game.getPlayer2().getRecord());
+               }
+        }
+
         //check for a win or tie. If there is one, call showResult() with a message containing the winner, and update the player stats. 
-       if(game.getBoardState().checkWin() == Mark.TIE) {
+       else {
+        if(game.getBoardState().checkWin() == Mark.TIE) {
         game.getPlayer1().incrementTies();
         game.getPlayer2().incrementTies();
         player1Record.getActor().setText(game.getPlayer1() + "(" + Mark.X + "): " + game.getPlayer1().getRecord());
@@ -173,14 +198,17 @@ public class GameDisplay extends ScreenAdapter {
         player2Record.getActor().setText(game.getPlayer2() + "(" + Mark.O + "): " + game.getPlayer2().getRecord());
         showResult("O Wins!");
        }
+    }
 
         //checkpoint 3 modification
         //if game is simulated, instead of having a popup by calling showresult, start the next game if we have not run all the simulations
+        
         
     }
 
     private void showResult(String result) {
         // Create an overlay to show the result. Include a button to play again. 
+        gameOver = true;
         resultLabel.getActor().setText(result);
         // when the button is clicked, it should dissappear - you can do this using the .remove() command. 
         playAgainButton = new TextButton("Play Again!",skin);
@@ -201,6 +229,7 @@ public class GameDisplay extends ScreenAdapter {
         game.setCurPlayer(0);
         resultLabel.getActor().setText("Who's Gonna Win?");
         curPlayerDisplay.getActor().setText("Current Player: " + game.getCurPlayerMark());
+        gameOver = false;
     }
 
     public void updateBoardDisplay() {//updates the board, you should call this if a move is made. No need to change. 
@@ -231,6 +260,16 @@ public class GameDisplay extends ScreenAdapter {
         stage.draw();
 
         //checkpoint 3 - if it is not a humans turn, automate the AI's move here
+        
+        if(!(gameOver)) {
+            if(!(game.getCurPlayerObj() instanceof Human))  {
+            game.getBoardState().makeMove(game.getCurPlayerObj().makeMove(game.getBoardState(),game.getCurPlayerMark()), game.getCurPlayerMark());
+            handleMoveMade();
+            game.nextPlayer();
+
+            //game.getCurPlayerObj().makeMove(game.getBoardState(),game.getCurPlayerMark()), game.getCurPlayerMark()
+        }
+    }
         //call handleMoveMade afterwards
     }
 

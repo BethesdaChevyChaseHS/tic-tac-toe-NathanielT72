@@ -5,6 +5,7 @@ public class RandomAI extends Player {
     public Move makeMove(Board board, Mark mark) {
         int row, col;
         do {
+            System.out.println("hi");
             row = (int) (Math.random() * 3);
             col = (int) (Math.random() * 3);
         } while (!board.getGrid()[row][col].equals(Mark.EMPTY));

@@ -40,7 +40,12 @@ public class TicTacToe extends Game {
             player1 = newPlayer;
             setScreen(new PlayerSelectionScreen(this,1));
         }
-        else {
+        else if (this.getIsSimulated() == true){
+            player2 = newPlayer;
+            setScreen(new NumSimulationScreen(this));
+            curPlayer = 0;
+        }
+        else if (this.getIsSimulated() == false){
             player2 = newPlayer;
             setScreen(new GameDisplay(this));
             curPlayer = 0;

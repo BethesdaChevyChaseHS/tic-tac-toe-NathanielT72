@@ -19,14 +19,8 @@ public class Board {
     }
 
     public boolean makeMove(Move move, Mark mark) {//make move on the grid
-       /*  if(grid[row][col] == Mark.EMPTY) {
-            grid[row][col] = mark;
-            return true;
-        }
-        else {
-            return false;
-        }*/
-        return false;
+        
+        return makeMove(move.row, move.col, mark) ;
     }
 
     public boolean makeMove(int row, int col, Mark mark) {
@@ -140,7 +134,6 @@ public class Board {
     }
 
     public Board clone() {
-        //return a copy of the grid
        return null;
     }
 }
