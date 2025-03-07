@@ -57,12 +57,12 @@ public class GameDisplay extends ScreenAdapter {
         stage.addActor(backgroundImage);
 
         player1Record = Constants.createLabelWithBackgrounColor(game.getPlayer1() + "(" + Mark.X + "): " + game.getPlayer1().getRecord(), Color.FIREBRICK, skin);
-        player1Record.setPosition(260, 440);
+        player1Record.setPosition(200, 440);
         player1Record.pack();
         stage.addActor(player1Record);
 
         player2Record = Constants.createLabelWithBackgrounColor(game.getPlayer2() + "(" + Mark.O + "): " + game.getPlayer2().getRecord(), Color.FIREBRICK, skin);
-        player2Record.setPosition(260, 400);
+        player2Record.setPosition(200, 400);
         player2Record.pack();
         stage.addActor(player2Record);
 
@@ -149,12 +149,17 @@ public class GameDisplay extends ScreenAdapter {
         //call updateBoardDisplay
         updateBoardDisplay();
 
-        if(game.getIsSimulated() == true) {
+        //checkpoint 3 modification
+        //if game is simulated, instead of having a popup by calling 
+        //showresult, start the next game if we have not run all the simulations
+
+        if(game.getIsSimulated() == true && game.getRound() < game.getNumberOfRounds()) {
             if(game.getBoardState().checkWin() == Mark.TIE) {
                 game.getPlayer1().incrementTies();
                 game.getPlayer2().incrementTies();
                 player1Record.getActor().setText(game.getPlayer1() + "(" + Mark.X + "): " + game.getPlayer1().getRecord());
                 player2Record.getActor().setText(game.getPlayer2() + "(" + Mark.O + "): " + game.getPlayer2().getRecord());
+                game.incrementRound();
                 resetGame();
             }
 
@@ -163,14 +168,18 @@ public class GameDisplay extends ScreenAdapter {
                 game.getPlayer2().incrementLosses();
                 player1Record.getActor().setText(game.getPlayer1() + "(" + Mark.X + "): " + game.getPlayer1().getRecord());
                 player2Record.getActor().setText(game.getPlayer2() + "(" + Mark.O + "): " + game.getPlayer2().getRecord());
-               }
+                game.incrementRound();
+                resetGame();
+            }
 
             if(game.getBoardState().checkWin() == Mark.O) {
                 game.getPlayer1().incrementLosses();
                 game.getPlayer2().incrementWins();
                 player1Record.getActor().setText(game.getPlayer1() + "(" + Mark.X + "): " + game.getPlayer1().getRecord());
                 player2Record.getActor().setText(game.getPlayer2() + "(" + Mark.O + "): " + game.getPlayer2().getRecord());
-               }
+                game.incrementRound();
+                resetGame();
+            }
         }
 
         //check for a win or tie. If there is one, call showResult() with a message containing the winner, and update the player stats. 
@@ -199,9 +208,6 @@ public class GameDisplay extends ScreenAdapter {
         showResult("O Wins!");
        }
     }
-
-        //checkpoint 3 modification
-        //if game is simulated, instead of having a popup by calling showresult, start the next game if we have not run all the simulations
         
         
     }
@@ -224,6 +230,7 @@ public class GameDisplay extends ScreenAdapter {
     }
     public void resetGame() {
         //update board state, current player, etc. 
+        //System.out.println(game.getRound());
         game.getBoardState().reset();
         updateBoardDisplay();
         game.setCurPlayer(0);
