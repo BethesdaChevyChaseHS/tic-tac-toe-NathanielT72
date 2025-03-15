@@ -70,7 +70,7 @@ public class PlayerSelectionScreen extends ScreenAdapter{
         }
     });
        TextButton smartAIButton = new TextButton("Smart AI", skin);
-       /*smartAIButton.addListener(new ClickListener() {
+       smartAIButton.addListener(new ClickListener() {
         @Override
         public void clicked(InputEvent event, float x, float y) {
             Player newPlayer = new SmartAI();
@@ -78,7 +78,7 @@ public class PlayerSelectionScreen extends ScreenAdapter{
         }
     });
         
-    */
+    
         MyTable.add(randomAIButton).pad(8).row();
         MyTable.add(slightlySmartAIButton).pad(8).row();
         MyTable.add(smartAIButton).pad(8).row();

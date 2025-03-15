@@ -237,6 +237,7 @@ public class GameDisplay extends ScreenAdapter {
         resultLabel.getActor().setText("Who's Gonna Win?");
         curPlayerDisplay.getActor().setText("Current Player: " + game.getCurPlayerMark());
         gameOver = false;
+        System.out.println(game.getCurPlayerMark());
     }
 
     public void updateBoardDisplay() {//updates the board, you should call this if a move is made. No need to change. 
